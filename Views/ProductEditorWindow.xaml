@@ -1,0 +1,72 @@
+<Window x:Class="TaskReward.Views.ProductEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="商品编辑" x:Name="Root"
+        Width="560" Height="Auto" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="#F6F7FD" WindowStyle="None" AllowsTransparency="True"
+        FontFamily="Segoe UI, Microsoft YaHei UI">
+    <Border CornerRadius="18" Background="White" BorderBrush="#E4E6F5" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="6" Opacity="0.22" Color="#1B1E4B"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="#F0F1FB" CornerRadius="18,18,0,0" Padding="22,16">
+                <Grid>
+                    <TextBlock Text="商品编辑" FontSize="18" FontWeight="Bold" Foreground="#23263F" VerticalAlignment="Center"/>
+                    <Button Content="✕" HorizontalAlignment="Right" Width="34" Height="34"
+                            Background="#E4E6F5" Cursor="Hand" FontSize="13" Foreground="#5A5FA0"
+                            Click="CloseBtn_Click"/>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Row="1" Margin="24,18,24,24">
+                <TextBlock Text="选择图标" FontSize="13" Foreground="#8A8FA8" Margin="0,0,0,8"/>
+                <ItemsControl x:Name="IconGrid">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton Style="{StaticResource IconPickButton}" Tag="{Binding}" Checked="Icon_Checked" GroupName="iconpick"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Text="商品名称" FontSize="13" Foreground="#8A8FA8" Margin="0,16,0,8"/>
+                <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding ItemName, ElementName=Root, UpdateSourceTrigger=PropertyChanged}" MaxLength="30"/>
+
+                <TextBlock Text="描述" FontSize="13" Foreground="#8A8FA8" Margin="0,16,0,8"/>
+                <TextBox Style="{StaticResource MultilineTextBox}" Text="{Binding Description, ElementName=Root, UpdateSourceTrigger=PropertyChanged}" MaxLength="200"/>
+
+                <Grid Margin="0,16,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="兑换积分" FontSize="13" Foreground="#8A8FA8" Margin="0,0,0,8"/>
+                        <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding CostText, ElementName=Root, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="Num_PreviewTextInput"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="库存（-1 不限量）" FontSize="13" Foreground="#8A8FA8" Margin="0,0,0,8"/>
+                        <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding StockText, ElementName=Root, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="Num_PreviewTextInput"/>
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+                    <Button Content="取消" Style="{StaticResource GhostButton}" Margin="0,0,12,0" Click="Cancel_Click"/>
+                    <Button Content="保存" Style="{StaticResource PrimaryButton}" Click="Save_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

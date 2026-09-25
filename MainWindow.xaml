@@ -1,0 +1,117 @@
+<Window x:Class="TaskReward.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:TaskReward.ViewModels"
+        xmlns:views="clr-namespace:TaskReward.Views"
+        Title="成长星 · 任务积分奖励系统"
+        Width="1240" Height="800" MinWidth="1000" MinHeight="660"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        FontFamily="Segoe UI, Microsoft YaHei UI"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}"><views:DashboardView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TasksViewModel}"><views:TasksView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DailyTasksViewModel}"><views:DailyTasksView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ShopViewModel}"><views:ShopView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AchievementsViewModel}"><views:AchievementsView/></DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Border x:Name="ShadowRoot" CornerRadius="16" Margin="0" BorderThickness="1" BorderBrush="#22FFFFFF" ClipToBounds="True">
+            <Border.Background>
+                <SolidColorBrush Color="#F3F4FB"/>
+            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="40" ShadowDepth="0" Opacity="0.35" Color="#151738"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="46"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- ============ 自定义标题栏 ============ -->
+                <Border Grid.Row="0" Background="{StaticResource GradSidebar}" MouseLeftButtonDown="TitleBar_MouseDown" MouseLeftButtonUp="TitleBar_MouseUp">
+                    <Grid>
+                        <TextBlock Text="★  成长星 · 任务积分奖励系统" Foreground="White" FontSize="13" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" Margin="16,0,0,0" Opacity="0.92"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button Content="─" Click="Minimize_Click" Width="46" Height="30" Style="{StaticResource BaseButton}"
+                                    Background="Transparent" Foreground="White" FontSize="14"/>
+                            <Button Content="▢" Click="Maximize_Click" Width="46" Height="30" Style="{StaticResource BaseButton}"
+                                    Background="Transparent" Foreground="White" FontSize="12"/>
+                            <Button Content="✕" Click="Close_Click" Width="46" Height="30" Style="{StaticResource BaseButton}"
+                                    Background="Transparent" Foreground="White" FontSize="14"
+                                    MouseEnter="Close_Hover" MouseLeave="Close_Leave"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- ============ 主体 ============ -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="228"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 侧栏 -->
+                    <Border Grid.Column="0" Background="{StaticResource GradSidebar}">
+                        <Grid Margin="14,18,14,20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- 品牌 -->
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8,0,0,22">
+                                <Border Width="46" Height="46" CornerRadius="14" Background="#33FFFFFF">
+                                    <TextBlock Text="🚀" FontSize="24" HorizontalAlignment="Center" Foreground="LightBlue" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel Margin="12,4,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="成长星" Foreground="White" FontSize="19" FontWeight="Bold"/>
+                                    <TextBlock Text="青少年成长激励系统" Foreground="#9AA0D6" FontSize="11" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- 导航 -->
+                            <StackPanel Grid.Row="1">
+                                <RadioButton Style="{StaticResource NavButton}" Content="首页概览" Tag="🏠" IsChecked="True"
+                                             GroupName="nav" Command="{Binding NavCommand}" CommandParameter="home"/>
+                                <RadioButton Style="{StaticResource NavButton}" Content="我的任务" Tag="📋"
+                                             GroupName="nav" Command="{Binding NavCommand}" CommandParameter="tasks"/>
+                                <RadioButton Style="{StaticResource NavButton}" Content="每日任务" Tag="🗓️"
+                                             GroupName="nav" Command="{Binding NavCommand}" CommandParameter="daily"/>
+                                <RadioButton Style="{StaticResource NavButton}" Content="积分商城" Tag="🎁"
+                                             GroupName="nav" Command="{Binding NavCommand}" CommandParameter="shop"/>
+                                <RadioButton Style="{StaticResource NavButton}" Content="我的成就" Tag="🏆"
+                                             GroupName="nav" Command="{Binding NavCommand}" CommandParameter="achieve"/>
+                            </StackPanel>
+
+                            <!-- 积分小卡 -->
+                            <Border Grid.Row="2" CornerRadius="14" Background="#26FFFFFF" Padding="16,14" Margin="4,0">
+                                <StackPanel>
+                                    <TextBlock Text="当前可用积分" Foreground="#B9BDE8" FontSize="11"/>
+                                    <TextBlock Text="{Binding PointsText}" Foreground="#FFC84A" FontSize="26" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <TextBlock Foreground="#8A8FB8" FontSize="11" Margin="0,2,0,0">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="历史累计 {0} 分">
+                                                <Binding Path="LifetimeText"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- 内容区 -->
+                    <Grid Grid.Column="1">
+                        <ContentControl Content="{Binding CurrentPage}" Margin="26,22,26,22"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
